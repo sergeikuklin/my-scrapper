@@ -16,9 +16,11 @@ const checkTerminPage = async () => {
     await page.setViewport({ width: 1080, height: 1024 });
     console.log('finished loading page');
 
+    console.log('Waiting for selector...');
     await page.waitForSelector('div.servicepanel__right > a.button--negative', {
       visible: true,
     });
+    console.log('Selector found!');
 
     await page.evaluate(() => {
       const element = document.querySelector(
