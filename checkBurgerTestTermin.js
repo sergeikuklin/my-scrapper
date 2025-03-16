@@ -13,7 +13,6 @@ export const checkTerminPage = async () => {
     const page = await browser.newPage();
     console.log('opening page');
     await page.goto(url);
-    await page.setViewport({ width: 1080, height: 1024 });
     console.log('finished loading page');
 
     await page.screenshot({ path: 'screenshot.png' });
