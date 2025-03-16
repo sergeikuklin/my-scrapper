@@ -1,6 +1,10 @@
-import { checkBurgerTestTerminJob } from './checkBurgerTestTermin.js';
+import {
+  checkBurgerTestTerminJob,
+  checkTerminPage,
+} from './checkBurgerTestTermin.js';
 import { sendMessage } from './sendMessage.js';
 
 sendMessage(`Проверка страницы термина запущена`);
 
-checkBurgerTestTerminJob.start();
+// checkBurgerTestTerminJob.start();
+checkTerminPage();

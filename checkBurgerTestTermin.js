@@ -4,7 +4,7 @@ import { sendMessage } from './sendMessage.js';
 
 const url = 'https://service.berlin.de/dienstleistung/351180/';
 
-const checkTerminPage = async () => {
+export const checkTerminPage = async () => {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
@@ -12,7 +12,7 @@ const checkTerminPage = async () => {
   try {
     const page = await browser.newPage();
     console.log('opening page');
-    await page.goto(url, { waitUntil: 'load' });
+    await page.goto(url);
     await page.setViewport({ width: 1080, height: 1024 });
     console.log('finished loading page');
 
