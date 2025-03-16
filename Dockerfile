@@ -1,5 +1,5 @@
-# Use Node.js 22 as the base image
-FROM node:22-slim
+
+FROM node:18-slim
 
 # Install necessary dependencies for Puppeteer to run Chromium
 RUN apt-get update && apt-get install -y \
