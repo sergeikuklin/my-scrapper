@@ -12,8 +12,9 @@ export const checkTerminPage = async () => {
   try {
     const page = await browser.newPage();
     console.log('opening page');
-    await page.goto(url);
+    await page.goto(url, { waitUntil: 'load' });
     console.log('finished loading page');
+    await page.screenshot({ path: 'screenshot.png' });
 
     console.log('Waiting for selector...');
     await page.waitForSelector('div.servicepanel__right > a.button--negative', {
