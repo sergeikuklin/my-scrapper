@@ -16,6 +16,8 @@ const checkTerminPage = async () => {
     await page.setViewport({ width: 1080, height: 1024 });
     console.log('finished loading page');
 
+    await page.screenshot({ path: 'screenshot.png' });
+
     console.log('Waiting for selector...');
     await page.waitForSelector('div.servicepanel__right > a.button--negative', {
       visible: true,
