@@ -12,7 +12,7 @@ export const checkTerminPage = async () => {
   try {
     const page = await browser.newPage();
     console.log('opening page');
-    await page.goto(url, { waitUntil: 'load' });
+    await page.goto(url);
     console.log('finished loading page');
     await page.screenshot({ path: 'screenshot.png' });
 
