@@ -2,7 +2,7 @@ import got from 'got';
 
 export const sendMessage = (message) => {
   const token = process.env.TELEGRAM_TOKEN ?? '';
-  const channel = process.env.CHAT_ID ?? '';
+  const channel = process.env.TELEGRAM_CHAT_ID ?? '';
   return sendMessageFor(token, channel)(message);
 };
 
