@@ -47,7 +47,8 @@ const checkTerminPage = async () => {
 export const checkBurgerTestTerminJob = new CronJob('0 */1 * * * *', () => {
   const d = new Date();
   console.log('Every Minute:', d);
-
   console.log('Checking Termin Page');
+
+  sendMessage(`Проверка страницы термина запущена`);
   checkTerminPage();
 });
