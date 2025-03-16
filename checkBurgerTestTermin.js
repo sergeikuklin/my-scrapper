@@ -6,6 +6,7 @@ const url = 'https://service.berlin.de/dienstleistung/351180/';
 
 const checkTerminPage = async () => {
   const browser = await puppeteer.launch({
+    headless: false,
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
@@ -17,6 +18,7 @@ const checkTerminPage = async () => {
     console.log('finished loading page');
 
     await page.waitForSelector('div.servicepanel__right > a.button--negative', {
+      timeout: 60000,
       visible: true,
     });
 
