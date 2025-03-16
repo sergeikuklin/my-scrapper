@@ -1,7 +1,5 @@
-// import { checkBurgerTestTerminJob } from './checkBurgerTestTermin.js';
-// import { sendMessage } from './sendMessage.js';
+import { checkBurgerTestTerminJob } from './checkBurgerTestTermin.js';
+import { sendMessage } from './sendMessage.js';
 
-// sendMessage(`Проверка страницы термина запущена`);
-// checkBurgerTestTerminJob.start();
-
-console.log('Hello, world!');
+sendMessage(`Проверка страницы термина запущена`);
+checkBurgerTestTerminJob.start();

@@ -1,6 +1,12 @@
 
 FROM node:20-alpine
 
+RUN apk add --no-cache \
+    udev \
+    ttf-freefont \
+    chromium
+
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 WORKDIR my-scrapper
 
