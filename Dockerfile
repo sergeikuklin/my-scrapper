@@ -1,8 +1,10 @@
-FROM node:18-alpine
-
+FROM node:18-slim
 
 # Install dependencies required by Puppeteer
+# Update and install required dependencies for Puppeteer and Chromium
 RUN apt-get update && apt-get install -y \
+  curl \
+  gnupg \
   ca-certificates \
   fonts-liberation \
   libappindicator3-1 \
@@ -20,9 +22,11 @@ RUN apt-get update && apt-get install -y \
   libxrandr2 \
   xdg-utils \
   wget \
-  curl \
-  gnupg \
-  --no-install-recommends
+  --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/*
+
+# Install Chromium (the browser Puppeteer uses)
+RUN apt-get install -y chromium --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 WORKDIR my-scrapper
 
