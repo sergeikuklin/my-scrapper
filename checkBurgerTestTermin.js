@@ -42,10 +42,14 @@ const checkTerminPage = async () => {
   browser.close();
 };
 
-export const checkBurgerTestTerminJob = new CronJob('0 */1 * * * *', () => {
+export const checkBurgerTestTerminJob = new CronJob('0 */5 * * * *', () => {
   const d = new Date();
-  console.log('Every Minute:', d);
+  console.log('Every 5 min:', d);
   console.log('Checking Termin Page');
 
-  checkTerminPage();
+  try {
+    checkTerminPage();
+  } catch (e) {
+    console.error(e);
+  }
 });
