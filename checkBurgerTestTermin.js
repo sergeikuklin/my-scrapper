@@ -6,7 +6,7 @@ const url = 'https://service.berlin.de/dienstleistung/351180/';
 
 const checkTerminPage = async () => {
   const browser = await puppeteer.launch({
-    headless: false,
+    '/usr/bin/google-chrome',
   });
   const page = await browser.newPage();
   console.log('opening page');
