@@ -25,8 +25,8 @@ RUN apt-get update && apt-get install -y \
   --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Chromium (the browser Puppeteer uses)
-RUN apt-get install -y chromium --no-install-recommends && rm -rf /var/lib/apt/lists/*
+# Install Chromium from the Debian repository
+RUN apt-get update && apt-get install -y chromium-browser --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 WORKDIR my-scrapper
 
