@@ -50,10 +50,14 @@ const checkTerminPage = async () => {
   }
 };
 
-export const checkBurgerTestTerminJob = new CronJob('0 */5 * * * *', () => {
-  const d = new Date();
-  console.log('Every 5 min:', d);
-  console.log('Checking Termin Page');
+export const checkBurgerTestTerminJob = CronJob.from({
+  cronTime: '0 */2 * * * *',
+  onTick: function () {
+    const d = new Date();
+    console.log('Every 2 min:', d);
+    console.log('Checking Termin Page');
 
-  checkTerminPage();
+    checkTerminPage();
+  },
+  start: true,
 });
