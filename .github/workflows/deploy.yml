@@ -42,4 +42,4 @@ jobs:
             docker pull ghcr.io/sergeikuklin/my-scrapper:latest
             docker stop my-scrapper
             docker system prune -f
-            docker run -d --name my-scrapper ghcr.io/sergeikuklin/my-scrapper:latest
+            docker run -d --name my-scrapper -p 6000:6000 ghcr.io/sergeikuklin/my-scrapper:latest
