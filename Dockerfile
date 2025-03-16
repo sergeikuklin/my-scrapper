@@ -1,12 +1,13 @@
-FROM node:18-slim
+# Use Node.js 22 as the base image
+FROM node:22-slim
 
-# Install dependencies required by Puppeteer
-# Update and install required dependencies for Puppeteer and Chromium
+# Install necessary dependencies for Puppeteer to run Chromium
 RUN apt-get update && apt-get install -y \
   curl \
-  gnupg \
   ca-certificates \
-  fonts-liberation \
+  libssl-dev \
+  libv8-dev \
+  libicu-dev \
   libappindicator3-1 \
   libasound2 \
   libatk-bridge2.0-0 \
@@ -22,10 +23,9 @@ RUN apt-get update && apt-get install -y \
   libxrandr2 \
   xdg-utils \
   wget \
-  --no-install-recommends \
-  && rm -rf /var/lib/apt/lists/*
+  --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
-# Install Chromium from the Debian repository
+# Download and install Chromium
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && dpkg -i google-chrome-stable_current_amd64.deb \
     || apt-get install -f -y
