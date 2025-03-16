@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM 22.14.0-alpine3.20
 
 WORKDIR alice-berlin-transport
 
