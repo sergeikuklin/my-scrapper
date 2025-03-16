@@ -2,6 +2,9 @@
 FROM node:18-slim
 
 # Install necessary dependencies for Puppeteer to run Chromium
+FROM node:18-slim
+
+# Install necessary dependencies for Puppeteer and Node.js to handle worker threads
 RUN apt-get update && apt-get install -y \
   curl \
   ca-certificates \
@@ -23,9 +26,12 @@ RUN apt-get update && apt-get install -y \
   libxrandr2 \
   xdg-utils \
   wget \
+  libc6-dev \
+  libpthread-stubs0-dev \
+  libglib2.0-dev \
   --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
-# Download and install Chromium
+# Install Chromium
 RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && dpkg -i google-chrome-stable_current_amd64.deb \
     || apt-get install -f -y
