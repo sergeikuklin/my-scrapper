@@ -1,6 +1,6 @@
 FROM node:22.14.0
 
-WORKDIR alice-berlin-transport
+WORKDIR my-scrapper
 
 COPY package*.json ./
 RUN npm ci
