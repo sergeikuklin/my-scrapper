@@ -1,6 +1,6 @@
 import { CronJob } from 'cron';
 import puppeteer from 'puppeteer';
-import { sendMessage } from './sendMessage.ts';
+import { sendMessage } from './sendMessage.js';
 
 const url = 'https://service.berlin.de/dienstleistung/351180/';
 
@@ -21,7 +21,7 @@ const checkTerminPage = async () => {
   await page.evaluate(() => {
     const element = document.querySelector(
       'div.servicepanel__right > a.button--negative'
-    ) as HTMLElement;
+    );
     if (!element) throw new Error('Button not found');
     element.click();
   });
