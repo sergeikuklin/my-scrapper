@@ -8,40 +8,46 @@ const checkTerminPage = async () => {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
-  const page = await browser.newPage();
-  console.log('opening page');
-  await page.goto(url, { waitUntil: 'networkidle0' });
-  await page.setViewport({ width: 1080, height: 1024 });
-  console.log('finished loading page');
 
-  await page.waitForSelector('div.servicepanel__right > a.button--negative', {
-    visible: true,
-  });
+  try {
+    const page = await browser.newPage();
+    console.log('opening page');
+    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.setViewport({ width: 1080, height: 1024 });
+    console.log('finished loading page');
 
-  await page.evaluate(() => {
-    const element = document.querySelector(
-      'div.servicepanel__right > a.button--negative'
-    );
-    if (!element) throw new Error('Button not found');
-    element.click();
-  });
+    await page.waitForSelector('div.servicepanel__right > a.button--negative', {
+      visible: true,
+    });
 
-  await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
-  console.log('Page changed to:', page.url());
+    await page.evaluate(() => {
+      const element = document.querySelector(
+        'div.servicepanel__right > a.button--negative'
+      );
+      if (!element) throw new Error('Button not found');
+      element.click();
+    });
 
-  const terminPageIsNotAvailable = await page.evaluate(() => {
-    return (
-      document.body.innerText.includes(
-        'Leider sind aktuell keine Termine für ihre Auswahl verfügbar.'
-      ) || document.body.innerText.includes('Wartung')
-    );
-  });
+    await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+    console.log('Page changed to:', page.url());
 
-  if (!terminPageIsNotAvailable) {
-    await sendMessage(`Проверьте страницу термина ${page.url()}`);
+    const terminPageIsNotAvailable = await page.evaluate(() => {
+      return (
+        document.body.innerText.includes(
+          'Leider sind aktuell keine Termine für ihre Auswahl verfügbar.'
+        ) || document.body.innerText.includes('Wartung')
+      );
+    });
+
+    if (!terminPageIsNotAvailable) {
+      await sendMessage(`Проверьте страницу термина ${page.url()}`);
+    }
+  } catch (e) {
+    console.error(e);
+    await sendMessage('Ошибка при проверке страницы термина');
+  } finally {
+    await browser.close();
   }
-
-  browser.close();
 };
 
 export const checkBurgerTestTerminJob = new CronJob('0 */5 * * * *', () => {
@@ -49,9 +55,5 @@ export const checkBurgerTestTerminJob = new CronJob('0 */5 * * * *', () => {
   console.log('Every 5 min:', d);
   console.log('Checking Termin Page');
 
-  try {
-    checkTerminPage();
-  } catch (e) {
-    console.error(e);
-  }
+  checkTerminPage();
 });
