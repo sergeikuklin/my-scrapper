@@ -17,7 +17,6 @@ const checkTerminPage = async () => {
     console.log('finished loading page');
 
     await page.waitForSelector('div.servicepanel__right > a.button--negative', {
-      timeout: 60000,
       visible: true,
     });
 
@@ -52,10 +51,10 @@ const checkTerminPage = async () => {
 };
 
 export const checkBurgerTestTerminJob = CronJob.from({
-  cronTime: '0 */2 * * * *',
+  cronTime: '0 */3 * * * *',
   onTick: function () {
     const d = new Date();
-    console.log('Every 2 min:', d);
+    console.log('Every 3 min:', d);
     console.log('Checking Termin Page');
 
     checkTerminPage();
