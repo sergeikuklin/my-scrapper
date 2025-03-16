@@ -12,7 +12,7 @@ const checkTerminPage = async () => {
   try {
     const page = await browser.newPage();
     console.log('opening page');
-    await page.goto(url, { waitUntil: 'networkidle0' });
+    await page.goto(url, { waitUntil: 'load' });
     await page.setViewport({ width: 1080, height: 1024 });
     console.log('finished loading page');
 
