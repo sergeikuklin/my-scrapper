@@ -90,12 +90,10 @@ export class TelegramChannel implements NotifierChannel {
       form.append('photo', fs.createReadStream(path));
 
       try {
-        const response = await got.post(`${this.baseUrl}/sendPhoto`, {
+        return await got.post(`${this.baseUrl}/sendPhoto`, {
           body: form,
           headers: form.getHeaders(),
         });
-
-        console.log('Response:', response);
       } catch (e) {
         console.error(e);
       }
