@@ -4,6 +4,8 @@ import { Notifier } from './notifications.ts';
 
 const url = 'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
 
+const proxyUrl = new URL(process.env.PROXY_URL ?? '');
+
 interface BrowserJob {
   start(): void;
   tick(): void;
@@ -16,7 +18,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
 
   get job() {
     return CronJob.from({
-      cronTime: '0 */4 * * * *',
+      cronTime: '0 */2 * * * *',
       onTick: this.tick.bind(this),
       runOnInit: true,
     });
@@ -35,16 +37,15 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--remote-debugging-port=9222',
-        `--proxy-server=http://38.154.227.167:5868`,
+        `--proxy-server=${proxyUrl.hostname}:${proxyUrl.port}`,
       ],
     });
 
     try {
       const page = await browser.newPage();
       await page.authenticate({
-        username: 'uyvjgxux',
-        password: 'wyui8nq3n8ho',
+        username: proxyUrl.username,
+        password: proxyUrl.password,
       });
       console.log('opening page');
 

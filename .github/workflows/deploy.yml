@@ -33,6 +33,8 @@ jobs:
           tags: ghcr.io/sergeikuklin/my-scrapper:latest
           build-args: |
             TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}
+            PROXY_URL=${{ secrets.PROXY_URL }}
+
       - name: Deploy package to digitalocean
         uses: appleboy/ssh-action@master
         with:
