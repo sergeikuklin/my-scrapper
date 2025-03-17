@@ -25,6 +25,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
   }
 
   async tick() {
+    console.log('notification', this.notification);
     const d = new Date();
     console.log('Every 2 min:', d);
     console.log('Checking Termin Page');
