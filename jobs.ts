@@ -7,8 +7,5 @@ export const startJobs = async () => {
   const notification = new Notifier(telegramChannel);
 
   const checkBurgerTestTerminJob = new CheckBurgerTestTerminJob(notification);
-  notification.sendMessages({
-    text: `Проверка страницы термина запущена`,
-  });
   checkBurgerTestTerminJob.start();
 };

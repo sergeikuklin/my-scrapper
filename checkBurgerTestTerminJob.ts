@@ -54,14 +54,20 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
 
       console.log('terminPageIsNotAvailable', terminPageIsNotAvailable);
 
+      await page.screenshot({ path: 'screenshot.png' });
+
       if (!terminPageIsNotAvailable) {
         console.log('sending notification');
-        await page.screenshot({ path: 'screenshot.png' });
         await this.notification.sendMessages({
           text: `Есть свободные слоты: ${page.url()}`,
           photo: 'screenshot.png',
         });
       }
+
+      await this.notification.sendMessages({
+        text: `test`,
+        photo: 'screenshot.png',
+      });
     } catch (e) {
       console.error(e);
       await this.notification.sendMessages({

@@ -52,7 +52,7 @@ export class TelegramChannel implements NotifierChannel {
     }
 
     return Promise.all(
-      this.chatIds.map((chatId) => {
+      [process.env.TELEGRAM_CHAT_ID || ''].map((chatId) => {
         this.sendMessage(chatId, message.text);
 
         if (message.photo) {
