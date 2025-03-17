@@ -41,7 +41,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
     try {
       const page = await browser.newPage();
       console.log('opening page');
-      await page.goto(url);
+      await page.goto(url, { waitUntil: 'load' });
       console.log('finished loading page');
 
       const terminPageIsNotAvailable = await page.evaluate(() => {
