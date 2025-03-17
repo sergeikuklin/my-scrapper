@@ -10,12 +10,14 @@ interface BrowserJob {
 }
 
 export class CheckBurgerTestTerminJob implements BrowserJob {
-  constructor(private notification: Notifier) {}
+  constructor(private notification: Notifier) {
+    this.notification = notification;
+  }
 
   get job() {
     return CronJob.from({
       cronTime: '0 */2 * * * *',
-      onTick: this.tick,
+      onTick: this.tick.bind(this),
       runOnInit: true,
     });
   }
@@ -25,7 +27,6 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
   }
 
   async tick() {
-    console.log('notification', this.notification);
     const d = new Date();
     console.log('Every 2 min:', d);
     console.log('Checking Termin Page');
