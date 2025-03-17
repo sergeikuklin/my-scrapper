@@ -2,10 +2,7 @@ import { CronJob } from 'cron';
 import puppeteer from 'puppeteer';
 import { Notifier } from './notifications.ts';
 
-const siteUrl =
-  'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
-
-const url = `http://api.scrape.do?token=466837969b96418f82ecbfc93c7773492858172618b&url=${siteUrl}`;
+const url = 'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
 
 interface BrowserJob {
   start(): void;
@@ -19,7 +16,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
 
   get job() {
     return CronJob.from({
-      cronTime: '0 */2 * * * *',
+      cronTime: '0 */4 * * * *',
       onTick: this.tick.bind(this),
       runOnInit: true,
     });
@@ -35,12 +32,22 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
     console.log('Checking Termin Page');
 
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--remote-debugging-port=9222',
+        `--proxy-server=http://38.154.227.167:5868`,
+      ],
     });
 
     try {
       const page = await browser.newPage();
+      await page.authenticate({
+        username: 'uyvjgxux',
+        password: 'wyui8nq3n8ho',
+      });
       console.log('opening page');
+
       await page.goto(url, { waitUntil: 'networkidle0' });
       console.log('finished loading page');
 
@@ -70,9 +77,6 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
       });
     } catch (e) {
       console.error(e);
-      await this.notification.sendMessages({
-        text: 'Ошибка при проверке страницы термина',
-      });
     } finally {
       console.log('closing browser');
       await browser.close();
