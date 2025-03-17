@@ -52,12 +52,20 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
       await page.goto(url, { waitUntil: 'networkidle0' });
       console.log('finished loading page');
 
-      const terminPageIsAvailable = await page.evaluate(() => {
-        return (
-          document.body.innerText.includes('Service-Portal') &&
-          document.body.innerText.includes('Terminvereinbarung')
-        );
-      });
+      const { isServicePortal, terminPageIsAvailable } = await page.evaluate(
+        () => {
+          const isServicePortal =
+            document.body.innerText.includes('Service-Portal');
+          const terminPageIsAvailable =
+            isServicePortal &&
+            document.body.innerText.includes('Bitte wählen Sie ein Datum:');
+
+          return { isServicePortal, terminPageIsAvailable };
+        }
+      );
+
+      console.log('isServicePortal', isServicePortal);
+      console.log('terminPageIsAvailable', terminPageIsAvailable);
 
       await page.screenshot({ path: 'screenshot.png' });
 
