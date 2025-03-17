@@ -1,21 +1,27 @@
 import got from 'got';
+import * as fs from 'fs';
+import FormData from 'form-data';
 
-interface Channel {
-  sendMessages(message: string): Promise<unknown>;
+type Message = {
+  text: string;
+  photo?: string;
+};
+
+export interface NotifierChannel {
+  sendMessages(message: Message): Promise<unknown>;
 }
 
-export class Notification {
-  constructor(private channel: Channel) {}
+export class Notifier {
+  constructor(private channel: NotifierChannel) {}
 
-  sendMessages(message: string) {
+  sendMessages(message: Message) {
     this.channel.sendMessages(message);
   }
 }
 
-export class TelegramChannel implements Channel {
+export class TelegramChannel implements NotifierChannel {
   chatIds: string[] = [];
   baseUrl: string;
-  static getChatIds: any;
 
   constructor(private token: string, chatIds: string[]) {
     this.baseUrl = `https://api.telegram.org/bot${token}`;
@@ -23,7 +29,8 @@ export class TelegramChannel implements Channel {
   }
 
   static async init(token: string) {
-    const chatIds = await this.getChatIds();
+    const tempInstance = new TelegramChannel(token, []);
+    const chatIds = await tempInstance.getChatIds();
     return new TelegramChannel(token, chatIds);
   }
 
@@ -39,13 +46,19 @@ export class TelegramChannel implements Channel {
     ];
   }
 
-  sendMessages(message: string): Promise<unknown> {
+  sendMessages(message: Message): Promise<unknown> {
     if (this.chatIds.length === 0) {
       throw new Error('Channel not initialized');
     }
 
     return Promise.all(
-      this.chatIds.map((chatId) => this.sendMessage(chatId, message))
+      [].map((chatId) => {
+        this.sendMessage(chatId, message.text);
+
+        if (message.photo) {
+          this.sendPhoto(chatId, message.photo);
+        }
+      })
     );
   }
 
@@ -63,6 +76,30 @@ export class TelegramChannel implements Channel {
     } catch (e) {
       console.error(e.response.body);
     }
+  }
+
+  async sendPhoto(chatId: string, path: string) {
+    fs.access(path, fs.constants.F_OK, async (err) => {
+      if (err) {
+        console.error(`Photo not found at path: ${path}`);
+        return; // Exit if the photo doesn't exist
+      }
+
+      const form = new FormData();
+      form.append('chat_id', chatId);
+      form.append('photo', fs.createReadStream(path));
+
+      try {
+        const response = await got.post(`${this.baseUrl}/sendPhoto`, {
+          body: form,
+          headers: form.getHeaders(),
+        });
+
+        console.log('Response:', response);
+      } catch (e) {
+        console.error(e);
+      }
+    });
   }
 
   async getUpdates() {

@@ -1,8 +1,3 @@
-import { checkBurgerTestTerminJob } from './checkBurgerTestTermin.ts';
-import { TelegramChannel } from './notifications.ts';
+import { startJobs } from './jobs.ts';
 
-const telegramChannel = TelegramChannel.;
-
-// sendMessage(`Проверка страницы термина запущена`);
-
-// checkBurgerTestTerminJob.start();
+startJobs();

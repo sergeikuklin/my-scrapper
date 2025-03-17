@@ -1,0 +1,70 @@
+import { CronJob } from 'cron';
+import puppeteer from 'puppeteer';
+import { Notifier } from './notifications.ts';
+
+const url = 'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
+
+interface BrowserJob {
+  start(): void;
+  tick(): void;
+}
+
+export class CheckBurgerTestTerminJob implements BrowserJob {
+  constructor(private notification: Notifier) {}
+
+  get job() {
+    return CronJob.from({
+      cronTime: '0 */2 * * * *',
+      onTick: this.tick,
+      runOnInit: true,
+    });
+  }
+
+  start(): void {
+    this.job.start();
+  }
+
+  async tick() {
+    const d = new Date();
+    console.log('Every 2 min:', d);
+    console.log('Checking Termin Page');
+
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+
+    try {
+      const page = await browser.newPage();
+      console.log('opening page');
+      await page.goto(url);
+      console.log('finished loading page');
+
+      const terminPageIsNotAvailable = await page.evaluate(() => {
+        return (
+          document.body.innerText.includes(
+            'Leider sind aktuell keine Termine für ihre Auswahl verfügbar.'
+          ) || document.body.innerText.includes('Wartung')
+        );
+      });
+
+      console.log('terminPageIsNotAvailable', terminPageIsNotAvailable);
+
+      if (!terminPageIsNotAvailable) {
+        console.log('sending notification');
+        await page.screenshot({ path: 'screenshot.png' });
+        await this.notification.sendMessages({
+          text: `Есть свободные слоты: ${page.url()}`,
+          photo: 'screenshot.png',
+        });
+      }
+    } catch (e) {
+      console.error(e);
+      await this.notification.sendMessages({
+        text: 'Ошибка при проверке страницы термина',
+      });
+    } finally {
+      console.log('closing browser');
+      await browser.close();
+    }
+  }
+}
