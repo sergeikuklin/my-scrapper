@@ -18,7 +18,8 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
 
   get job() {
     return CronJob.from({
-      cronTime: '0 */2 * * * *',
+      // every 2 min from 8 to 18
+      cronTime: '0-59/2 8-18 * * *',
       onTick: this.tick.bind(this),
       runOnInit: true,
     });
