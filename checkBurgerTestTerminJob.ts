@@ -2,7 +2,10 @@ import { CronJob } from 'cron';
 import puppeteer from 'puppeteer';
 import { Notifier } from './notifications.ts';
 
-const url = 'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
+const siteUrl =
+  'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
+
+const url = `http://api.scrape.do?token=466837969b96418f82ecbfc93c7773492858172618b&url=${siteUrl}`;
 
 interface BrowserJob {
   start(): void;
