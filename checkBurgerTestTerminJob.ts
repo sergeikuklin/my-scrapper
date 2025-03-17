@@ -59,6 +59,8 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
         );
       });
 
+      await page.screenshot({ path: 'screenshot.png' });
+
       if (!terminPageIsNotAvailable) {
         console.log('sending notification');
         await page.screenshot({ path: 'screenshot.png' });
@@ -69,6 +71,10 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
       }
     } catch (e) {
       console.error(e);
+      await this.notification.sendMessages({
+        text: `Произошла при проверке слотов`,
+        photo: 'screenshot.png',
+      });
     } finally {
       console.log('closing browser');
       await browser.close();
