@@ -1,9 +1,8 @@
 import { CronJob } from 'cron';
 import puppeteer from 'puppeteer';
-import { sendMessage } from './sendMessage.js';
+import { sendMessage } from './notifications.ts';
 
 const url = 'https://service.berlin.de/dienstleistung/351180/';
-const proxyUrl = `http://api.scrape.do?token=466837969b96418f82ecbfc93c7773492858172618b&url=${url}`;
 
 export const checkTerminPage = async () => {
   const browser = await puppeteer.launch({
@@ -13,9 +12,8 @@ export const checkTerminPage = async () => {
   try {
     const page = await browser.newPage();
     console.log('opening page');
-    await page.goto(proxyUrl);
+    await page.goto(url);
     console.log('finished loading page');
-    // await page.screenshot({ path: 'screenshot.png' });
 
     console.log('Waiting for selector...');
     await page.waitForSelector('div.servicepanel__right > a.button--negative', {
@@ -43,6 +41,7 @@ export const checkTerminPage = async () => {
     });
 
     if (!terminPageIsNotAvailable) {
+      await page.screenshot({ path: 'screenshot.png' });
       await sendMessage(`Проверьте страницу термина ${page.url()}`);
     }
   } catch (e) {
@@ -54,10 +53,10 @@ export const checkTerminPage = async () => {
 };
 
 export const checkBurgerTestTerminJob = CronJob.from({
-  cronTime: '0 */3 * * * *',
+  cronTime: '0 */2 * * * *',
   onTick: function () {
     const d = new Date();
-    console.log('Every 3 min:', d);
+    console.log('Every 2 min:', d);
     console.log('Checking Termin Page');
 
     checkTerminPage();
