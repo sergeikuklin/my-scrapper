@@ -1,5 +1,5 @@
 
-FROM node:22-alpine
+FROM node:22.14.0-alpine
 
 RUN apk add --no-cache \
     udev \
