@@ -45,7 +45,17 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
     console.log('Checking Termin Page');
 
     try {
-      await this.browser.close();
+      if (this.browser) {
+        await this.browser.close();
+      }
+
+      this.browser = await puppeteer.launch({
+        args: [
+          '--no-sandbox',
+          '--disable-setuid-sandbox',
+          `--proxy-server=${proxyUrl.hostname}:${proxyUrl.port}`,
+        ],
+      });
 
       const page = await this.browser.newPage();
       await page.authenticate({
