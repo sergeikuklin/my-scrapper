@@ -50,12 +50,22 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
       });
 
       const page = await this.browser.newPage();
+
+      if (page.isClosed()) {
+        console.error('page is closed');
+        return;
+      }
+
       await page.authenticate({
         username: proxyUrl.username,
         password: proxyUrl.password,
       });
-      console.log('opening page');
 
+      console.log('opening page');
+      if (page.isClosed()) {
+        console.error('page is closed');
+        return;
+      }
       await page.goto(url);
       console.log('finished loading page');
 
