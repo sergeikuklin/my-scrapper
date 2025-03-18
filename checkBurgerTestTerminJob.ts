@@ -50,7 +50,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
       });
       console.log('opening page');
 
-      await page.goto(url, { waitUntil: 'networkidle0' });
+      await page.goto(url);
       console.log('finished loading page');
 
       const { isServicePortal, terminPageIsAvailable } = await page.evaluate(
@@ -81,7 +81,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
     } catch (e) {
       console.error(e);
       await this.notification.sendMessages({
-        text: `Произошла при проверке слотов`,
+        text: `Произошла ошибка при проверке слотов`,
         photo: 'screenshot.png',
       });
     } finally {
