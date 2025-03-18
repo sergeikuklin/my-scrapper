@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import puppeteer, { Browser } from 'puppeteer';
+import puppeteer, { Browser, Page } from 'puppeteer';
 import { Notifier } from './notifications.ts';
 
 const url = 'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
@@ -28,6 +28,14 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
   }
 
   async start(): Promise<void> {
+    this.browser = await puppeteer.launch({
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        `--proxy-server=${proxyUrl.hostname}:${proxyUrl.port}`,
+      ],
+    });
+
     this.job.start();
   }
 
@@ -36,20 +44,15 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
     console.log('Every 2 min:', d);
     console.log('Checking Termin Page');
 
+    let page: Page | null = null;
+
     try {
-      if (this.browser) {
-        await this.browser.close();
+      const pages = await this.browser.pages();
+      for (let page of pages) {
+        await page.close();
       }
 
-      this.browser = await puppeteer.launch({
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox',
-          `--proxy-server=${proxyUrl.hostname}:${proxyUrl.port}`,
-        ],
-      });
-
-      const page = await this.browser.newPage();
+      page = await this.browser.newPage();
       await page.authenticate({
         username: proxyUrl.username,
         password: proxyUrl.password,
@@ -91,8 +94,11 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
         photo: 'screenshot.png',
       });
     } finally {
-      console.log('closing browser');
-      await this.browser.close();
+      console.log('closing page');
+
+      if (page) {
+        await page.close();
+      }
     }
   }
 }
