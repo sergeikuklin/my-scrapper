@@ -28,14 +28,6 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
   }
 
   async start(): Promise<void> {
-    this.browser = await puppeteer.launch({
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        `--proxy-server=${proxyUrl.hostname}:${proxyUrl.port}`,
-      ],
-    });
-
     this.job.start();
   }
 
