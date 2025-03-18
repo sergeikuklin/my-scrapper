@@ -1,5 +1,5 @@
 import { CronJob } from 'cron';
-import puppeteer, { Browser, Page } from 'puppeteer';
+import puppeteer, { Browser } from 'puppeteer';
 import { Notifier } from './notifications.ts';
 
 const url = 'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
@@ -44,15 +44,10 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
     console.log('Every 2 min:', d);
     console.log('Checking Termin Page');
 
-    let page: Page | null = null;
-
     try {
-      const pages = await this.browser.pages();
-      for (let page of pages) {
-        await page.close();
-      }
+      await this.browser.close();
 
-      page = await this.browser.newPage();
+      const page = await this.browser.newPage();
       await page.authenticate({
         username: proxyUrl.username,
         password: proxyUrl.password,
@@ -94,11 +89,8 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
         photo: 'screenshot.png',
       });
     } finally {
-      console.log('closing page');
-
-      if (page) {
-        await page.close();
-      }
+      console.log('closing browser');
+      await this.browser.close();
     }
   }
 }
