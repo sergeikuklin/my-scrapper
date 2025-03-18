@@ -95,11 +95,8 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
         });
       }
     } catch (e) {
+      console.log('Error while checking termin page');
       console.error(e);
-      await this.notification.sendMessages({
-        text: `Произошла ошибка при проверке слотов`,
-        photo: 'screenshot.png',
-      });
     } finally {
       console.log('closing browser');
       await this.browser.close();
