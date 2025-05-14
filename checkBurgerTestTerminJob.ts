@@ -90,7 +90,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
         console.log('sending notification');
         await page.screenshot({ path: 'screenshot.png' });
         await this.notification.sendMessages({
-          text: `Есть свободные слоты: ${page.url()}`,
+          text: `Есть свободные слоты: ${url}`,
           photo: 'screenshot.png',
         });
       }
