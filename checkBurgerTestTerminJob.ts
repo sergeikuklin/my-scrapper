@@ -28,6 +28,9 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
   }
 
   async start(): Promise<void> {
+    this.notification.sendMessages({
+      text: `ПроверОчка началась`,
+    });
     this.job.start();
   }
 
