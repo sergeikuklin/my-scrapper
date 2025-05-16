@@ -4,7 +4,7 @@ import { Notifier } from './notifications.ts';
 
 const url = 'https://service.berlin.de/terminvereinbarung/termin/all/351180/';
 
-const proxyUrl = new URL(process.env.PROXY_URL ?? '');
+const proxyUrl = process.env.PROXY_URL ? new URL(process.env.PROXY_URL) : null;
 
 interface BrowserJob {
   start(): void;
@@ -28,9 +28,9 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
   }
 
   async start(): Promise<void> {
-    this.notification.sendMessages({
-      text: `ПроверОчка началась`,
-    });
+    // this.notification.sendMessages({
+    //   text: `ПроверОчка началась`,
+    // });
     this.job.start();
   }
 
@@ -48,7 +48,7 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
         args: [
           '--no-sandbox',
           '--disable-setuid-sandbox',
-          `--proxy-server=${proxyUrl.hostname}:${proxyUrl.port}`,
+          proxyUrl ? `--proxy-server=${proxyUrl.hostname}:${proxyUrl.port}` : '',
         ],
       });
 
@@ -59,10 +59,12 @@ export class CheckBurgerTestTerminJob implements BrowserJob {
         return;
       }
 
-      await page.authenticate({
-        username: proxyUrl.username,
-        password: proxyUrl.password,
-      });
+      if (proxyUrl) {
+        await page.authenticate({
+          username: proxyUrl.username,
+          password: proxyUrl.password,
+        });
+      }
 
       console.log('opening page');
       if (page.isClosed()) {
